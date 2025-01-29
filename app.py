@@ -13,6 +13,8 @@ from bson import ObjectId
 load_dotenv()
 
 app = Flask(__name__)
+
+# CORS setup to allow requests from any origin
 CORS(app)
 
 # MongoDB Atlas Configuration
