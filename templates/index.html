@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Generator</title>
+</head>
+<body>
+    <h1>Quiz Generator</h1>
+
+    <!-- File Upload Section -->
+    <div>
+        <input type="file" id="fileInput" accept=".pdf" />
+        <button onclick="uploadFile()">Upload File</button>
+    </div>
+
+    <!-- Quiz Questions Section -->
+    <div id="quizSection" style="display:none;">
+        <h2>Quiz Questions</h2>
+        <form id="quizForm"></form>
+        <button onclick="submitResult()">Submit Answers</button>
+    </div>
+
+    <!-- Score Section -->
+    <div id="scoreSection" style="display:none;">
+        <h2>Your Score: <span id="score"></span></h2>
+    </div>
+
+    <script>
+        let quizId = null;
+        let quizQuestions = [];
+        let userAnswers = {};
+        let totalQuestions = 0;
+
+        // Upload File and Generate Quiz
+        function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+
+            if (!file) return alert('Please select a file');
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('http://localhost:5000/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.quizId && data.quizQuestions) {
+                    quizId = data.quizId;
+                    quizQuestions = data.quizQuestions;
+                    totalQuestions = quizQuestions.length;
+                    displayQuizQuestions();
+                } else {
+                    alert('Failed to generate quiz');
+                }
+            })
+            .catch(error => {
+                console.error('Error uploading file:', error);
+                alert('Error uploading file');
+            });
+        }
+
+        // Display Quiz Questions
+        function displayQuizQuestions() {
+            const quizForm = document.getElementById('quizForm');
+            quizForm.innerHTML = ''; // Clear previous form
+
+            quizQuestions.forEach((question, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.innerHTML = `
+                    <p>${question.question}</p>
+                    <input type="radio" name="question${index}" value="A" onclick="selectAnswer(${index}, 'A')"> A) ${question.choices[0]}<br>
+                    <input type="radio" name="question${index}" value="B" onclick="selectAnswer(${index}, 'B')"> B) ${question.choices[1]}<br>
+                    <input type="radio" name="question${index}" value="C" onclick="selectAnswer(${index}, 'C')"> C) ${question.choices[2]}<br>
+                    <input type="radio" name="question${index}" value="D" onclick="selectAnswer(${index}, 'D')"> D) ${question.choices[3]}<br>
+                `;
+                quizForm.appendChild(questionDiv);
+            });
+
+            document.getElementById('quizSection').style.display = 'block';
+        }
+
+        // Handle Answer Selection
+        function selectAnswer(index, answer) {
+            userAnswers[index] = answer;
+        }
+
+        // Submit Results
+        function submitResult() {
+            const selectedAnswers = Object.values(userAnswers);
+            const finalScore = quizQuestions.reduce((score, question, index) => {
+                return score + (userAnswers[index] === question.correctAnswer ? 1 : 0);
+            }, 0);
+
+            fetch('http://localhost:5000/submit-result', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    quizId: quizId,
+                    selectedAnswers: selectedAnswers,
+                    score: finalScore,
+                    totalQuestions: totalQuestions
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.resultId) {
+                    document.getElementById('score').textContent = `${finalScore} / ${totalQuestions}`;
+                    document.getElementById('quizSection').style.display = 'none';
+                    document.getElementById('scoreSection').style.display = 'block';
+                } else {
+                    alert('Error submitting result');
+                }
+            })
+            .catch(error => {
+                console.error('Error submitting result:', error);
+                alert('Error submitting result');
+            });
+        }
+    </script>
+</body>
+</html>
