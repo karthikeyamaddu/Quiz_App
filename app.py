@@ -203,7 +203,8 @@ def generate_quiz_from_text(text):
     """
 
     try:
-        model = genai.GenerativeModel("gemini-pro")
+        # Use the gemini-2.0-flash-exp model here
+        model = genai.GenerativeModel("gemini-2.0-flash-exp")
         response = model.generate_content(prompt)
 
         if not response or not response.text:
