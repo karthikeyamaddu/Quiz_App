@@ -1,4 +1,3 @@
-import random
 from flask import Flask, request, jsonify
 import os
 import fitz  # PyMuPDF
@@ -16,7 +15,7 @@ load_dotenv()
 app = Flask(__name__)
 
 # CORS setup for local frontend (React at http://localhost:3000)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 # MongoDB Configuration (using local or Atlas URI from .env)
 MONGODB_URI = os.getenv("MONGODB_URI")
