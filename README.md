@@ -36,7 +36,7 @@ A powerful Flask-based backend API that converts PDF documents into interactive 
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone (https://github.com/karthikeyamaddu/Quiz_App.git)
    cd backend
    ```
 
