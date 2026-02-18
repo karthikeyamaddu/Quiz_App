@@ -14,8 +14,12 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# CORS setup for local frontend (React at http://localhost:3000)
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+# CORS setup for local and deployed frontends
+cors_origins = os.getenv(
+    "CORS_ORIGINS",
+    "http://localhost:3000,http://localhost:5173,http://localhost:5173/Quiz_frontend,https://karthikeyamaddu.github.io"
+).split(",")
+CORS(app, resources={r"/*": {"origins": [origin.strip() for origin in cors_origins]}})
 
 # MongoDB Configuration (using local or Atlas URI from .env)
 MONGODB_URI = os.getenv("MONGODB_URI")
@@ -67,7 +71,8 @@ def generate_quiz_from_text(text):
     """
 
     try:
-        model = genai.GenerativeModel("gemini-2.0-flash-exp")
+        model_name = os.getenv("GEMINI_MODEL", "models/gemini-2.5-flash")
+        model = genai.GenerativeModel(model_name)
         response = model.generate_content(prompt)
         if not response or not response.text:
             raise Exception("Gemini API returned an empty response")
