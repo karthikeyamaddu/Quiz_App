@@ -1,0 +1,25 @@
+# Python caches
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Local Python env
+venv/
+.venv/
+env/
+
+# Frontend deps/build
+frontend/node_modules/
+frontend/dist/
+
+# Runtime outputs
+uploads/
+*.log
+
+# Large model artifacts/checkpoints
+**/checkpoint-*/
+**/*.safetensors
+**/*.bin
+**/*.pt
+**/*.pth
+**/*.ckpt

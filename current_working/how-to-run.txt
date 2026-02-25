@@ -1,0 +1,20 @@
+first start the frontend
+npm run dev 
+then start the backend
+python app.py
+
+
+font forget the colab file, and the ngrok url
+
+personal mail
+https://colab.research.google.com/drive/1BH5XaRoFRqPSODBxyJZ4EwMnAAJbZfuT#scrollTo=t1EXG4gvVWwm
+
+
+replace the ngrok url in the backend with new url
+
+also dont forget to run the ollama model
+go to cmd
+run ollama list
+model-name:llama2-uncensored:latest
+copy the model-name
+run ollama run model-name

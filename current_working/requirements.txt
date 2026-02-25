@@ -1,0 +1,12 @@
+torch==2.2.2
+transformers==4.35.2
+safetensors==0.6.2
+numpy==1.26.4
+langchain-ollama==0.1.0
+python-dotenv==1.0.0
+requests==2.31.0
+flask==3.0.3
+flask-cors==5.0.0
+PyMuPDF==1.24.10
+google-generativeai==0.8.3
+sentencepiece==0.2.0
