@@ -16,6 +16,11 @@ frontend/dist/
 uploads/
 *.log
 
+# Secrets
+.env
+.env.*
+!.env.example
+
 # Large model artifacts/checkpoints
 **/checkpoint-*/
 **/*.safetensors
